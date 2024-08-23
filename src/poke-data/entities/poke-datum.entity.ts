@@ -1,1 +1,19 @@
-export class PokeDatum {}
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+
+@Schema()
+export class Pokedatum extends Document {
+  @Prop({ required: true, unique: true })
+  id: number;
+
+  @Prop({ required: true })
+  name: string;
+
+  @Prop()
+  height: number;
+
+  @Prop()
+  weight: number;
+}
+
+export const PokedatumSchema = SchemaFactory.createForClass(Pokedatum);

@@ -1,34 +1,52 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PokeDataService } from './poke-data.service';
-import { CreatePokeDatumDto } from './dto/create-poke-datum.dto';
-import { UpdatePokeDatumDto } from './dto/update-poke-datum.dto';
+import { Controller, Get, Param, Post, Body, Logger } from '@nestjs/common';
+import { PokedatumService } from './poke-data.service';
+import { Pokedatum } from './entities/poke-datum.entity';
 
-@Controller('poke-data')
-export class PokeDataController {
-  constructor(private readonly pokeDataService: PokeDataService) {}
+@Controller('pokedata')
+export class PokedatumController {
+  logger = new Logger('PokedatumController');
+  constructor(private readonly pokedatumService: PokedatumService) {}
 
   @Post()
-  create(@Body() createPokeDatumDto: CreatePokeDatumDto) {
-    return this.pokeDataService.create(createPokeDatumDto);
+  async create(
+    @Body() createPokedatumDto: Partial<Pokedatum>,
+  ): Promise<Pokedatum> {
+    return this.pokedatumService.create(createPokedatumDto);
   }
 
   @Get()
-  findAll() {
-    return this.pokeDataService.findAll();
+  async findAll(): Promise<Pokedatum[]> {
+    return this.pokedatumService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pokeDataService.findOne(+id);
+  async findOne(@Param('id') id: number): Promise<Pokedatum> {
+    return this.pokedatumService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePokeDatumDto: UpdatePokeDatumDto) {
-    return this.pokeDataService.update(+id, updatePokeDatumDto);
-  }
+  @Get('pokemon/:name')
+  async findOnePokemon(@Param('name') name: string) {
+    const response = await this.pokedatumService.findOnePokemon(name);
+    let payload = {};
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pokeDataService.remove(+id);
+    if (response.forms[0].name) {
+      // this.logger.log('forms.name --> ' + response.forms[0].name);
+      payload = {
+        name: response.forms[0].name,
+      };
+    }
+    if (response.name) {
+      // this.logger.log('name --> ' + response.name);
+      payload = {
+        name: response.name,
+      };
+    }
+    payload = {
+      ...payload,
+      height: response.height,
+      weight: response.weight,
+      id: response.id,
+    };
+    return payload;
   }
 }

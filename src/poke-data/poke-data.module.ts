@@ -1,9 +1,16 @@
 import { Module } from '@nestjs/common';
-import { PokeDataService } from './poke-data.service';
-import { PokeDataController } from './poke-data.controller';
+import { PokedatumService } from './poke-data.service';
+import { PokedatumController } from './poke-data.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { PokedatumSchema } from './entities/poke-datum.entity';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  controllers: [PokeDataController],
-  providers: [PokeDataService],
+  imports: [
+    MongooseModule.forFeature([{ name: 'Pokedatum', schema: PokedatumSchema }]),
+    HttpModule,
+  ],
+  controllers: [PokedatumController],
+  providers: [PokedatumService],
 })
 export class PokeDataModule {}
