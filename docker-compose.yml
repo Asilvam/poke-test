@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   app:
     build: .
     container_name: node_app
     ports:
-      - "3000:3000"
+      - "3500:3500"
     volumes:
       - .:/usr/src/app
     networks:
