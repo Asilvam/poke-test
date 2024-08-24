@@ -1,15 +1,19 @@
+version: '3.8'
 services:
   app:
     build: .
-    container_name: node_app
+    container_name: appnode
     ports:
       - "3500:3500"
     volumes:
-      - .:/usr/src/app
+      - /usr/src/app/node_modules
     networks:
       - mongo_network
     depends_on:
       - mongodb
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+      API_URL: https://pokeapi.co/api/v2/pokemon
 
   mongodb:
     image: mongo

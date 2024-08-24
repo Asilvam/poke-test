@@ -17,6 +17,6 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow only specified headers
     credentials: true,
   });
-  await app.listen(process.env.PORT || 3100);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
